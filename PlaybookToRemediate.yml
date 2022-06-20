@@ -20,6 +20,12 @@
 # $ ansible-playbook -i "192.168.1.155," playbook.yml
 # $ ansible-playbook -i inventory.ini playbook.yml
 #
+# G. Crowe
+# Playbook amended to do the following:
+# 1. Remnove AIDE installation & configuration
+# 2. Run aithselect select minimal --force aghainst cloud image as authselect setting chokes the anisble play
+# 3. Install the openscap-scvanner on the target machine
+# 4. Run the report and pull back to local machine.
 ###############################################################################
 
 
@@ -20682,3 +20688,25 @@
         - medium_disruption
         - medium_severity
         - no_reboot_needed
+
+# Final bit - run the opescap erport on target server and pull that back to the local machine
+    - name: Run Openscap report on target system
+      ansible.builtin.shell:
+          cmd: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis --results cis.xml --report /tmp/{{ inventory_hostname }}_report.html /usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml"
+      register: result_runreport
+      when:
+        - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+        - ansible_os_family == "RedHat"
+      tags:
+        - report_only
+
+    - name: Specifying a path directly
+      ansible.builtin.fetch:
+        src: "/tmp/{{ inventory_hostname }}_report.html"
+        dest: "{{ inventory_hostname }}_report.html"
+        flat: yes
+      when:
+        - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+        - ansible_os_family == "RedHat"
+      tags:
+        - report_only
