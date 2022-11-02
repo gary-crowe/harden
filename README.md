@@ -1,20 +1,16 @@
 # harden
 Ansible code to harden Azure image.
-This code security hardens to V1.0.0 of the CIS standard.
-##
+This code security hardens to Linux 8 Benchmark™, v2.0.0, released 2022-02-23 (CIS)
+
 There are 2 playbooks:
 | PlayBook    | Description |
 | ----------- | ----------- |
-| ciclvl1.yml | Hardens to CIS Level 1 Server 1 |
-| ciclvl2.yml | Hardens to CIS Level 1 Server 2 |
+| ciclvl1.yml | CIS Red Hat Enterprise Linux 8 Benchmark for Level 1 - Server |
+| ciclvl2.yml | CIS Red Hat Enterprise Linux 8 Benchmark for Level 2 - Server |
 
-Edit the user details within the playbooks for your Azure user (default is azureuser)
+The code will harden, and also run the OpenSCAP report and pull it back into the current directory as: ```{{inventory_host}}_report.html ``` This will enable you to test the results for your garget system.  See ```example_report.html``` as an example of the generated report contents.
 
-The code will also run the OpenSCAP report and pull it back into the current directory as: ```{{inventory_host}}_report.html ```
-
-See ```example_report.html``` as an example.
-
-This will use the current OPENSCAP reports from https://github.com/ComplianceAsCode/content/releases and not those installed as part of openscap.  You should check the current level (this code uses scap-security-guide-0.1.64-oval-5.10.zip).  If it is later, then you will need to re-generate the ansible playbook using the following on a fresh install of the OS you plan to harden:
+This code will use the current OPENSCAP reports from https://github.com/ComplianceAsCode/content/releases and not those installed as part of openscap.  You should check the current level (this code uses scap-security-guide-0.1.64-oval-5.10.zip).  If it is later, then you will need to re-generate the ansible playbook using the following on a fresh install of the OS you plan to harden:
 
 1.	Install openscap-scanner scap-security-guide 
 ```bash
