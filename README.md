@@ -1,6 +1,7 @@
 # harden
 Ansible code to harden Azure image.
-This code security hardens to Linux 8 Benchmark™, v2.0.0, released 2022-02-23 (CIS)
+This code security hardens to Linux 8 Benchmark™, v2.0.0, released 2022-02-23
+This profile includes Center for Internet Security® Red Hat Enterprise Linux 8 CIS Benchmarks™ content.
 
 There are 2 playbooks:
 | PlayBook    | Description |
