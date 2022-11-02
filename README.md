@@ -1,15 +1,17 @@
 # harden
 Ansible code to harden Azure image.
-This code security hardens to V1.0.0 of the CIS standard.  There are 2 playbooks:
-ciclvl1.yml : Hardens to CIS Level 1 Server 1
-ciclvl2.yml : Hardens to CIS Level 1 Server 2
+This code security hardens to V1.0.0 of the CIS standard.
+##
+There are 2 playbooks:
+| PlayBook    | Description |
+| ----------- | ----------- |
+| ciclvl1.yml | Hardens to CIS Level 1 Server 1 |
+| ciclvl2.yml | Hardens to CIS Level 1 Server 2 |
 
-Edit the user details within the playbooks for your Azure user (azureuser)
+Edit the user details within the playbooks for your Azure user (default is azureuser)
 
-The code will also run the OpenSCAP report and pull it back into the current directory as:
-```bash
-{{inventory_host}}_report.html
-```
+The code will also run the OpenSCAP report and pull it back into the current directory as: ```{{inventory_host}}_report.html ```
+
 See ```example_report.html``` as an example.
 
 This will use the current OPENSCAP reports from https://github.com/ComplianceAsCode/content/releases and not those installed as part of openscap.  You should check the current level (this code uses scap-security-guide-0.1.64-oval-5.10.zip).  If it is later, then you will need to re-generate the ansible playbook using the following on a fresh install of the OS you plan to harden:
@@ -40,18 +42,19 @@ oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis --results ci
 ```bash
 oscap xccdf generate fix --fix-type ansible --output PlaybookToRemediate.yml --result-id "" cis.xml
 ```	
-7.	Copy this playbook to your ansible server and remove AIDE, add login details etc as per the existing code here.
+7.	Copy this playbook to your ansible server and copy the ssg-rhel8-ds.xml file to the "files" folder.
+8.	Edit your generated playbook and remove AIDE, add login details etc as per the existing code here.
 
 # Running the playbook.
 You will need to have an ansible server and a virtual environment.
 Instructs here are for RHEL.
 1.	Subscribe your system
-2.	Install python3.9 ```sudo dnf install python3.9```
-3.	Install virtualenv ```sudo dnf install virtualenv```
-4. 	Create your environment ```virtualenv -p python3.9 venv```
-5.	Source that environment ```source ./venv/bin/activate```
-6.	Install ansible ```pip install ansible```
-7.	Run the required play ```ansible-playbook -vi "13.87.73.76," cislvl1.yml```
+2.	Install python3.9 : ```sudo dnf install python3.9```
+3.	Install virtualenv :  ```sudo dnf install virtualenv```
+4. 	Create your environment :  ```virtualenv -p python3.9 venv```
+5.	Source that environment :  ```source ./venv/bin/activate```
+6.	Install ansible :  ```pip install ansible```
+7.	Run the required play :  ```ansible-playbook -vi "13.87.73.76," cislvl1.yml```
 
 ## Running just the report.
 If you only want to run the report after hardening, run the following:
