@@ -12,28 +12,35 @@ The code will also run the OpenSCAP report and pull it back into the current dir
 ```
 See ```example_report.html``` as an example.
 
-This will use the current OPENSCAP reports from https://github.com/ComplianceAsCode/content/releases and not those installed as part of openscap.  You should check the current level (this code uses scap-security-guide-0.1.64-oval-5.10.zip).  If ot is later, then you will need to re-generate the ansible playbook using the following on a fresh install of the OS you plan to harden:
+This will use the current OPENSCAP reports from https://github.com/ComplianceAsCode/content/releases and not those installed as part of openscap.  You should check the current level (this code uses scap-security-guide-0.1.64-oval-5.10.zip).  If it is later, then you will need to re-generate the ansible playbook using the following on a fresh install of the OS you plan to harden:
 
 1.	Install openscap-scanner scap-security-guide 
+```bash
+sudo dnf install openscap-scanner scap-security-guide -y
+```
 2.	Download the latest zip file 
-3.	```oscap info ./scap-security-guide-X.X.XX-oval-X.XX/ssg-rhel8-ds.xml```
+```bash
+wget https://github.com/ComplianceAsCode/content/releases/download/v0.1.64/scap-security-guide-0.1.64-oval-5.10.zip
+```
+3.	List the hardening protocols supported
+```bash
+oscap info ./scap-security-guide-X.X.XX-oval-X.XX/ssg-rhel8-ds.xml
+```
 4.	Choose the hardening you want (CIS 1, 2 etc)
 ```bash
-oscap info --profile xccdf_org.ssgproject.content_profile_cis \  
-                      ./scap-security-guide-0.1.62/ssg-rhel8-ds.xml
-
+oscap info --profile xccdf_org.ssgproject.content_profile_cis \
+      ./scap-security-guide-0.1.62/ssg-rhel8-ds.xml
 ```
 5.	Generate the report locally
 ```bash
-oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis \
-    --results cis.xml ./scap-security-guide-0.1.62/ssg-rhel8-ds.xml
+oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis --results cis.xml \
+     ./scap-security-guide-0.1.62/ssg-rhel8-ds.xml
 ```
 6.	Generate the ansible code
 ```bash
-oscap xccdf generate fix --fix-type ansible --output PlaybookToRemediate.yml \
-     --result-id "" cis.xml
+oscap xccdf generate fix --fix-type ansible --output PlaybookToRemediate.yml --result-id "" cis.xml
 ```	
-7.	Copy this code to your ansible server and remove AIDE, add login details etc as per the existing code here.
+7.	Copy this playbook to your ansible server and remove AIDE, add login details etc as per the existing code here.
 
 # Running the playbook.
 You will need to have an ansible server and a virtual environment.
